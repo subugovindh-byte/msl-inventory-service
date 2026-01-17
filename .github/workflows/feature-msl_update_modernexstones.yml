@@ -15,13 +15,13 @@ on:
 env:
   # Configure these in GitHub: Settings -> Secrets and variables -> Actions -> Variables
   # Example values:
-  #   AZURE_WEBAPP_NAME_DEV:  modernex_dev
-  #   AZURE_WEBAPP_NAME_TEST: modernex_test
-  #   AZURE_WEBAPP_NAME_PROD: modernex_prod
   # If you don't set variables, the defaults below are used.
-  AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV || 'modernex_dev' }}
-  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'modernex_test' }}
-  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'modernex_prod' }}
+  # Dev is set from the live URL you provided:
+  #   https://modernex-dev-hcf8hafhh5hkbtgr.canadacentral-01.azurewebsites.net
+  AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV || 'modernex-dev-hcf8hafhh5hkbtgr' }}
+  # Set these via GitHub Actions Variables (recommended) once you create the apps.
+  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'CHANGE_ME_TEST_APP_NAME' }}
+  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'CHANGE_ME_PROD_APP_NAME' }}
 
 jobs:
   build:
@@ -91,6 +91,13 @@ jobs:
         with:
           name: node-app
 
+      - name: Validate Azure app name (test)
+        run: |
+          if [ "${AZURE_WEBAPP_NAME_TEST}" = "CHANGE_ME_TEST_APP_NAME" ]; then
+            echo "AZURE_WEBAPP_NAME_TEST is not set. Add a GitHub Actions Variable AZURE_WEBAPP_NAME_TEST." >&2
+            exit 1
+          fi
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -118,6 +125,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+
+      - name: Validate Azure app name (prod)
+        run: |
+          if [ "${AZURE_WEBAPP_NAME_PROD}" = "CHANGE_ME_PROD_APP_NAME" ]; then
+            echo "AZURE_WEBAPP_NAME_PROD is not set. Add a GitHub Actions Variable AZURE_WEBAPP_NAME_PROD." >&2
+            exit 1
+          fi
 
       - name: Login to Azure
         uses: azure/login@v2
