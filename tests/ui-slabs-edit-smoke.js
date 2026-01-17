@@ -8,6 +8,19 @@ const app = require('../index');
 
 function ok(cond, msg) { if (!cond) { console.error('FAIL:', msg); process.exitCode = 1; } else { console.log('PASS:', msg); } }
 
+async function waitFor(predicate, { timeoutMs = 2000, intervalMs = 25 } = {}) {
+  const started = Date.now();
+  while (true) {
+    try {
+      if (predicate()) return true;
+    } catch (_) {
+      // ignore transient DOM errors while re-rendering
+    }
+    if (Date.now() - started > timeoutMs) return false;
+    await new Promise(r => setTimeout(r, intervalMs));
+  }
+}
+
 function superFetch(app) {
   return async function(url, options = {}) {
     const method = (options.method || 'GET').toUpperCase();
@@ -89,12 +102,16 @@ function superFetch(app) {
   if (qcSel) qcSel.value = 'passed';
   const form = dom.window.document.querySelector('form.edit-form');
   ok(!!form, 'Edit form present');
-  form.dispatchEvent(new dom.window.Event('submit'));
-  await new Promise(r => setTimeout(r, 20));
+  // Use a real-ish submit event; many handlers call preventDefault(), which only
+  // works when the event is cancelable.
+  form.dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true }));
+
+  // Save triggers async fetch + re-render; CI can be slower than local.
+  const closed = await waitFor(() => !dom.window.document.querySelector('form.edit-form'), { timeoutMs: 3000 });
 
   // After submit, editor should close and table should reflect updates
   const formAfter = dom.window.document.querySelector('form.edit-form');
-  ok(!formAfter, 'Edit form closed after save');
+  ok(closed && !formAfter, 'Edit form closed after save');
   const psSelAfter = dom.window.document.querySelector('select[data-pagesize="true"]');
   if (psSelAfter) { psSelAfter.value = '240'; psSelAfter.dispatchEvent(new dom.window.Event('change')); }
 
