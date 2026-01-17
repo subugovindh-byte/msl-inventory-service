@@ -8,12 +8,12 @@ Also includes derived-product families created from slabs (Tiles, Cobbles, Monum
 Quick start
 -----------
 
-Requirements: Node v16+ and npm
+Requirements: Node v18+ and npm
 
 Run locally:
 
 ```bash
-cd uiux/modernex/inventory-service
+cd msl-inventory-service
 npm install
 
 # create/update DB schema
@@ -22,12 +22,41 @@ npm run migrate
 # optional: seed some demo data
 npm run seed
 
-# Recommended: start the dev instance via helper (DB=dev, port 4002)
+# Recommended: start the dev instance via helper (DB_NAME=dev, port 4002)
 ./scripts/manage-servers.sh start dev
 
 # UI: http://localhost:4002/ui/
 # API: http://localhost:4002/
 ```
+
+Server environments (dev/test/prod)
+-------------------------------
+
+This repo includes a small helper script to run multiple environments with stable defaults:
+
+- `dev`  -> `DB_NAME=dev`, `PORT=4002`
+- `test` -> `DB_NAME=test_ui`, `PORT=4001`
+- `prod` -> `DB_NAME=prod`, `PORT=4011`
+
+Common commands:
+
+```bash
+./scripts/manage-servers.sh status dev
+./scripts/manage-servers.sh restart dev
+
+./scripts/manage-servers.sh restart test
+./scripts/manage-servers.sh restart prod
+
+# restart all (dev -> test -> prod)
+./scripts/manage-servers.sh restart dev && \
+	./scripts/manage-servers.sh restart test && \
+	./scripts/manage-servers.sh restart prod
+```
+
+Where to look when debugging:
+
+- Logs: `/tmp/inventory-service-<env>.log`
+- PID files: `/tmp/inventory-service-<env>.pid`
 
 Access from phone / other device (same Wi‑Fi)
 --------------------------------------------
@@ -173,6 +202,12 @@ Install dependencies
 
 ```bash
 npm install
+```
+
+Run tests
+
+```bash
+npm test
 ```
 
 Run migrations (development DB)
