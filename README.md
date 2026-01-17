@@ -8,7 +8,7 @@ Also includes derived-product families created from slabs (Tiles, Cobbles, Monum
 Quick start
 -----------
 
-Requirements: Node v18+ and npm
+Requirements: Node v20+ and npm
 
 Run locally:
 
