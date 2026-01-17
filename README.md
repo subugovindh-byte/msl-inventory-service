@@ -182,7 +182,7 @@ Database migrations (dev/test/prod)
 Migrations are idempotent and run safely via `db.js`. Recommended commands:
 
 ```bash
-# Migrate the default development DB (dev.db)
+# Migrate the default DB (test_ui.db)
 npm run migrate
 
 # Migrate an explicit DB by name (creates <name>.db in the project folder)
@@ -231,7 +231,7 @@ DB_NAME=dev node scripts/seed-dev-test-data.js --count 1
 Wipe data (destructive)
 
 ```bash
-# wipe currently-selected DB (defaults to dev.db)
+# wipe currently-selected DB (defaults to test_ui.db)
 npm run wipe
 
 # wipe dev.db + test_ui.db

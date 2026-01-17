@@ -5,7 +5,7 @@
 
   Safety:
   - Does nothing unless you pass --yes
-  - By default targets the same DB selection logic as the app (DB_FILE / DB_NAME / dev.db)
+  - By default targets the same DB selection logic as the app (DB_FILE / DB_NAME / test_ui.db)
   - Use --all-local to wipe dev.db + test_ui.db (excludes prod.db unless --include-prod)
 
   Examples:
@@ -29,7 +29,7 @@ function resolveDbFileFromEnv(projectRoot) {
   if (envName && envName.trim()) {
     return path.join(projectRoot, `${envName}.db`);
   }
-  return path.join(projectRoot, 'dev.db');
+  return path.join(projectRoot, 'test_ui.db');
 }
 
 function listTables(db) {

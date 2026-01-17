@@ -14,7 +14,7 @@
   DB selection matches the app:
   - DB_FILE: absolute or relative path
   - DB_NAME: <name>.db under project root
-  - default: dev.db
+  - default: test_ui.db
 
   Examples:
     node scripts/import-db.js --yes --in ./exports/dev-20260116.db --db-name dev
@@ -53,7 +53,7 @@ function resolveDbFileFromEnv(root) {
   if (envName && envName.trim()) {
     return path.join(root, `${envName}.db`);
   }
-  return path.join(root, 'dev.db');
+  return path.join(root, 'test_ui.db');
 }
 
 function resolveDbFile({ root, dbName, dbFile }) {

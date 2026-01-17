@@ -15,7 +15,9 @@ const resolveDbFile = () => {
   if (envName && envName.trim()) {
     return path.join(__dirname, `${envName}.db`);
   }
-  return path.join(__dirname, 'dev.db');
+  // Default to the test DB to match the default server port (4001) and
+  // keep CI/App Service deployments from unintentionally writing to dev.db.
+  return path.join(__dirname, 'test_ui.db');
 };
 
 const DB_FILE = resolveDbFile();
