@@ -12,6 +12,16 @@ on:
       - 'v*'
   workflow_dispatch:
 
+env:
+  # Configure these in GitHub: Settings -> Secrets and variables -> Actions -> Variables
+  # Example values:
+  #   AZURE_WEBAPP_NAME_DEV:  modernexstones-dev
+  #   AZURE_WEBAPP_NAME_TEST: modernexstones-test
+  #   AZURE_WEBAPP_NAME_PROD: modernexstones-prod
+  AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV }}
+  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST }}
+  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -63,8 +73,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'modernexstones'
-          slot-name: 'dev'
+          app-name: ${{ env.AZURE_WEBAPP_NAME_DEV }}
           package: .
 
   deploy_test:
@@ -92,8 +101,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'modernexstones'
-          slot-name: 'test'
+          app-name: ${{ env.AZURE_WEBAPP_NAME_TEST }}
           package: .
 
   deploy_prod:
@@ -121,7 +129,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'modernexstones'
-          slot-name: 'Production'
+          app-name: ${{ env.AZURE_WEBAPP_NAME_PROD }}
           package: .
           
