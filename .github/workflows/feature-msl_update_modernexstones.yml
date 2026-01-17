@@ -15,12 +15,13 @@ on:
 env:
   # Configure these in GitHub: Settings -> Secrets and variables -> Actions -> Variables
   # Example values:
-  #   AZURE_WEBAPP_NAME_DEV:  modernexstones-dev
-  #   AZURE_WEBAPP_NAME_TEST: modernexstones-test
-  #   AZURE_WEBAPP_NAME_PROD: modernexstones-prod
-  AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV }}
-  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST }}
-  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD }}
+  #   AZURE_WEBAPP_NAME_DEV:  modernex_dev
+  #   AZURE_WEBAPP_NAME_TEST: modernex_test
+  #   AZURE_WEBAPP_NAME_PROD: modernex_prod
+  # If you don't set variables, the defaults below are used.
+  AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV || 'modernex_dev' }}
+  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'modernex_test' }}
+  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'modernex_prod' }}
 
 jobs:
   build:
