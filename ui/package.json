@@ -1,0 +1,9 @@
+{
+  "name": "modernex-ui-tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run-tests.js"
+  }
+}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Inventory Management</title>
+  <link rel="stylesheet" href="/ui/styles.css">
+  <!-- AG Grid Community styles (local) -->
+  <link rel="stylesheet" href="/ui/vendor/ag-grid/ag-theme-alpine.css">
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div class="brand">
+        <img id="site-logo" src="/ui/vendor/Modernex_Logo_Transparent.png" alt="Modernex Logo">
+        <h1>Inventory Management</h1>
+      </div>
+      <div class="search-wrap">
+        <div class="amazon-search-container">
+          <select id="search-category" class="search-category">
+            <option value="all">All</option>
+            <option value="suppliers">Suppliers</option>
+            <option value="qbids">QBIDs</option>
+            <option value="blocks">Blocks</option>
+            <option value="slabs">Slabs</option>
+            <option value="labels">Labels</option>
+            <option value="tiles">Tiles</option>
+            <option value="cobbles">Cobbles</option>
+            <option value="monuments">Monuments</option>
+            <option value="pavers">Pavers</option>
+          </select>
+          <input id="global-search" type="text" placeholder="Search inventory…" aria-label="Search inventory">
+          <button id="search-btn" type="button" class="search-btn" title="Search">🔍</button>
+        </div>
+        <div id="header-actions" class="header-actions">
+          <button id="qr-scan-btn" type="button" class="header-action" title="Scan a QR code">Scan QR</button>
+          <button id="labels-btn" type="button" class="header-action" title="Open label generator">Labels</button>
+          <div class="ai-badge-container">
+            <button id="nexa-badge" class="ai-badge" aria-haspopup="true" aria-expanded="false" title="AI NexaIQ">AI NexaIQ</button>
+            <div id="nexa-badge-menu" class="ai-badge-menu" role="menu" hidden>
+              <button role="menuitem" data-action="open-chat">Open Chat</button>
+              <button role="menuitem" data-action="show-summary">Show Summary</button>
+              <button role="menuitem" data-action="show-insights">Show Insights</button>
+              <button role="menuitem" data-action="show-visibility">Show Visibility</button>
+              <button role="menuitem" data-action="show-reorder">Show Reorder</button>
+              <button role="menuitem" data-action="show-slow">Show Slow-Moving</button>
+              <button role="menuitem" data-action="show-about">About AI NexaIQ</button>
+            </div>
+              <!-- moved summary next to the badge so it appears beside the badge/menu -->
+              <div id="nexa-summary" class="nexa-summary" hidden>
+                <div class="nexa-summary-body"></div>
+              </div>
+            </div>
+        </div>
+
+        <div class="header-more-wrap">
+          <button id="header-more-btn" type="button" class="header-action header-more" aria-haspopup="true" aria-expanded="false" aria-controls="header-more-menu" title="More">⋯</button>
+          <div id="header-more-menu" class="header-more-menu" hidden></div>
+        </div>
+      </div>
+    </div>
+    <div class="header-main">
+      <button class="menu-toggle" aria-controls="main-nav" aria-expanded="false" title="Toggle menu">☰ Menu</button>
+      <nav id="main-nav">
+        <button type="button" data-view="suppliers">Suppliers</button>
+        <button type="button" data-view="qbids">QBIDs</button>
+        <button type="button" data-view="blocks">Blocks</button>
+        <button type="button" data-view="slabs">Slabs</button>
+        <button type="button" data-view="labels">Labels</button>
+        <button type="button" data-view="tiles">Tiles</button>
+        <button type="button" data-view="cobbles">Cobbles</button>
+        <button type="button" data-view="monuments">Monuments</button>
+        <button type="button" data-view="pavers">Pavers</button>
+        <button type="button" data-view="events">Events</button>
+        <button type="button" data-view="dispatches">Dispatches</button>
+      </nav>
+    </div>
+  </header>
+  <main id="app">
+    <section id="content"></section>
+  </main>
+  <!-- Build/version badge to help confirm the loaded UI version -->
+  <div id="ui-build" style="position:fixed;right:8px;bottom:8px;background:#222;color:#fff;padding:6px 8px;border-radius:6px;font-size:12px;opacity:0.9;z-index:9999">UI v2026-01-04</div>
+  <!-- AG Grid Community script (local UMD) -->
+  <script src="/ui/vendor/ag-grid/ag-grid-community.noStyle.js"></script>
+  <!-- SheetJS for Excel export (local) -->
+  <script src="/ui/vendor/sheetjs/xlsx.full.min.js"></script>
+  <!-- QR code generator (CDN). Used by Labels view. -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script type="module" src="/ui/main.js?v=20260104T170200"></script>
+  <!-- About panel for AI NexaIQ -->
+  <div id="nexa-about" class="nexa-about" hidden>
+    <div class="nexa-about-content">
+      <button class="nexa-about-close" aria-label="Close">✕</button>
+      <h2>AI NexaIQ — Intelligent Inventory Management for Stone Industry</h2>
+      <p>AI NexaIQ is a purpose-built inventory intelligence platform designed specifically for the stone, granite, marble, and quartz industry. It helps slab yards, processors, and distributors gain complete control over stock movement, demand planning, and capital locked in inventory.</p>
+      <p>Unlike generic inventory software, NexaIQ understands the real-world complexity of stone materials — sizes, thicknesses, finishes, lots, batches, and yard locations — and turns that data into clear, actionable decisions.</p>
+      <h3>Built for Granite, Marble &amp; Quartz Operations</h3>
+      <p>Stone inventory is not simple units — it’s slabs, blocks, thicknesses, colors, finishes, and natural variation. AI NexaIQ is designed to manage exactly that. It continuously analyzes:</p>
+      <ul>
+        <li>Granite, marble &amp; quartz slabs</li>
+        <li>Block-wise and slab-wise inventory</li>
+        <li>Thickness (16mm, 18mm, 20mm, etc.)</li>
+        <li>Finish types (polished, honed, leather)</li>
+        <li>Lot &amp; batch information</li>
+        <li>Yard / warehouse / showroom locations</li>
+      </ul>
+      <h3>Smarter Stock Decisions, Lower Losses</h3>
+      <p>Traditional systems only tell you what is in stock. AI NexaIQ tells you what will move, what will not, and what to do next. By learning from historical sales, project consumption, and lead times, NexaIQ helps you:</p>
+      <ul>
+        <li>Avoid overstocking slow-moving materials</li>
+        <li>Prevent stock-outs of high-demand colors</li>
+        <li>Reduce capital blocked in dead inventory</li>
+      </ul>
+      <h3>Key Features for Stone Businesses</h3>
+      <ul>
+        <li>Real-Time Slab &amp; Block Visibility</li>
+        <li>AI-Based Demand Forecasting</li>
+        <li>Smart Reorder &amp; Quarry Planning</li>
+        <li>Slow-Moving &amp; Dead Stock Identification</li>
+        <li>Inventory Value &amp; Capital Analysis</li>
+        <li>Multi-Yard &amp; Multi-Location Management</li>
+        <li>Simple, Human-Friendly Insights (ask questions like "Which granite colors are running low?")</li>
+      </ul>
+      <h3>Designed to Work with Your Existing Systems</h3>
+      <p>AI NexaIQ integrates seamlessly with ERP systems, accounting software (Tally, SAP, etc.), and existing inventory databases or spreadsheets. It acts as an intelligent decision layer, not a replacement.</p>
+      <h3>Why Stone Businesses Choose AI NexaIQ</h3>
+      <ul>
+        <li>Reduces inventory holding costs</li>
+        <li>Improves slab utilization</li>
+        <li>Prevents overproduction and overbuying</li>
+        <li>Improves planning accuracy</li>
+        <li>Supports smarter quarry and yard decisions</li>
+      </ul>
+      <p><strong>One-Line Summary:</strong> AI NexaIQ is an intelligent inventory management system built for the stone industry, helping granite, marble, and quartz businesses optimize stock, forecast demand, and reduce capital lock-in.</p>
+    </div>
+  </div>
+  <!-- Nexa Chat: toggle button and panel -->
+  <div id="aiiq-chat">
+    <button id="aiiq-chat-toggle" aria-controls="aiiq-chat-panel" aria-expanded="false" title="Open Nexa Chat">💬 Nexa</button>
+    <div id="aiiq-chat-panel" role="dialog" aria-label="Nexa Chat" hidden>
+      <div class="aiiq-chat-header">
+        <strong>Nexa Chat</strong>
+        <button class="aiiq-chat-close" aria-label="Close">✕</button>
+      </div>
+      <div class="aiiq-chat-messages" id="aiiq-chat-messages" aria-live="polite"></div>
+      <form class="aiiq-chat-input" id="aiiq-chat-form">
+        <input type="text" id="aiiq-chat-text" placeholder="Ask about inventory…" aria-label="Message">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

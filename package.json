@@ -1,0 +1,40 @@
+{
+  "name": "modernex-inventory-service",
+  "version": "0.1.0",
+  "description": "Lightweight inventory microservice for ModernEx: QBID -> Block -> SLID -> Dispatch flows (Express + SQLite)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "migrate": "node db.js --migrate",
+    "seed": "node db.js --seed",
+    "seed:devtest": "node scripts/seed-dev-test-data.js",
+    "wipe": "node scripts/wipe-db.js --yes",
+    "wipe:all": "node scripts/wipe-db.js --all-local --yes",
+    "export:db": "node scripts/export-db.js --format db",
+    "export:sql": "node scripts/export-db.js --format sql",
+    "import": "node scripts/import-db.js",
+    "test": "node tests/run-tests.js && node tests/ui-smoke.js && node tests/ui-router-smoke.js && node tests/ui-views-smoke.js && node tests/ui-slabs-edit-smoke.js && node tests/ui-aggrid-smoke.js && node tests/ui-derived-smoke.js && node tests/ui-derived-router-smoke.js && node tests/ui-derived-fallback-smoke.js && node tests/ui-exports-smoke.js && node tests/ui-exports-fallback-smoke.js",
+    "migrate:prod": "DB_NAME=prod node db.js --migrate",
+    "start:prod": "NODE_ENV=production PORT=4011 DB_NAME=prod node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^8.0.1",
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "jimp": "^0.16.2",
+    "multer": "^2.0.0",
+    "qrcode": "^1.5.4",
+    "qrcode-reader": "^1.0.4",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3",
+    "jsdom": "^24.0.0"
+  }
+}
