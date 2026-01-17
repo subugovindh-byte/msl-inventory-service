@@ -19,9 +19,11 @@ env:
   # Dev is set from the live URL you provided:
   #   https://modernex-dev-hcf8hafhh5hkbtgr.canadacentral-01.azurewebsites.net
   AZURE_WEBAPP_NAME_DEV: ${{ vars.AZURE_WEBAPP_NAME_DEV || 'modernex-dev-hcf8hafhh5hkbtgr' }}
-  # Set these via GitHub Actions Variables (recommended) once you create the apps.
-  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'CHANGE_ME_TEST_APP_NAME' }}
-  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'CHANGE_ME_PROD_APP_NAME' }}
+  # Test/prod are set from the live URLs you provided:
+  #   https://modernex-test-grc6aqcngxe3gqdf.canadacentral-01.azurewebsites.net
+  #   https://modernex-prod-hughf7dsamfnadhz.canadacentral-01.azurewebsites.net
+  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'modernex-test-grc6aqcngxe3gqdf' }}
+  AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'modernex-prod-hughf7dsamfnadhz' }}
 
 jobs:
   build:
@@ -91,13 +93,6 @@ jobs:
         with:
           name: node-app
 
-      - name: Validate Azure app name (test)
-        run: |
-          if [ "${AZURE_WEBAPP_NAME_TEST}" = "CHANGE_ME_TEST_APP_NAME" ]; then
-            echo "AZURE_WEBAPP_NAME_TEST is not set. Add a GitHub Actions Variable AZURE_WEBAPP_NAME_TEST." >&2
-            exit 1
-          fi
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -125,13 +120,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-
-      - name: Validate Azure app name (prod)
-        run: |
-          if [ "${AZURE_WEBAPP_NAME_PROD}" = "CHANGE_ME_PROD_APP_NAME" ]; then
-            echo "AZURE_WEBAPP_NAME_PROD is not set. Add a GitHub Actions Variable AZURE_WEBAPP_NAME_PROD." >&2
-            exit 1
-          fi
 
       - name: Login to Azure
         uses: azure/login@v2
