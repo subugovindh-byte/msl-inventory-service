@@ -1,19 +1,16 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - modernex test/prod
+name: Build and deploy Node.js app to Azure Web App - modernex-prod
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
   workflow_dispatch:
 
 env:
   # Optional overrides via GitHub repo variables.
-  AZURE_WEBAPP_NAME_TEST: ${{ vars.AZURE_WEBAPP_NAME_TEST || 'modernex-test-grc6aqcngxe3gqdf' }}
   AZURE_WEBAPP_NAME_PROD: ${{ vars.AZURE_WEBAPP_NAME_PROD || 'modernex-prod-hughf7dsamfnadhz' }}
 
 jobs:
@@ -41,34 +38,6 @@ jobs:
         with:
           name: node-app
           path: .
-
-  deploy_test:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D9BE02D1E3E949B091C7DBB0DCC7E584 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8A19A34523CD46A1BC98F97C858B8720 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_5312545FA462497BB0F2D84472C0D363 }}
-
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME_TEST }}
-          package: .
 
   deploy_prod:
     runs-on: ubuntu-latest
