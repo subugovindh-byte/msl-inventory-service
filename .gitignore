@@ -4,6 +4,10 @@ node_modules/
 # local databases / data artifacts
 *.db
 
+# allow committing safe fixture DBs (schema-only)
+!db/fixtures/
+!db/fixtures/*.db
+
 # generated exports
 exports/
 
