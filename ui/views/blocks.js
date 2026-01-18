@@ -122,7 +122,10 @@ export async function renderBlocks(root, params = {}) {
         try {
           await fetchExpectOk('/blocks/' + encodeURIComponent(r.block_id), { method: 'DELETE' });
           showToast('Deleted block ' + r.block_id, 'success');
-          location.hash = '#blocks' + (blocksFilterParent ? ('?parent=' + encodeURIComponent(blocksFilterParent)) : '');
+          const ts = Date.now();
+          location.hash = '#blocks' + (blocksFilterParent
+            ? ('?parent=' + encodeURIComponent(blocksFilterParent) + '&t=' + ts)
+            : ('?t=' + ts));
         } catch (e) {
           showToast('Delete failed: ' + e, 'error');
         }
@@ -203,7 +206,16 @@ export async function renderBlocks(root, params = {}) {
       del.onclick = async () => {
         const r = p.data; if (r.children_count > 0) { showToast('Cannot delete: child items exist.', 'error'); return; }
         if (!confirm('Delete ' + r.block_id + '?')) return;
-        try { await fetchExpectOk('/blocks/' + encodeURIComponent(r.block_id), { method: 'DELETE' }); showToast('Deleted block ' + r.block_id, 'success'); location.hash = '#blocks' + (blocksFilterParent ? ('?parent=' + encodeURIComponent(blocksFilterParent)) : ''); } catch (e) { showToast('Delete failed: ' + e, 'error'); }
+        try {
+          await fetchExpectOk('/blocks/' + encodeURIComponent(r.block_id), { method: 'DELETE' });
+          showToast('Deleted block ' + r.block_id, 'success');
+          const ts = Date.now();
+          location.hash = '#blocks' + (blocksFilterParent
+            ? ('?parent=' + encodeURIComponent(blocksFilterParent) + '&t=' + ts)
+            : ('?t=' + ts));
+        } catch (e) {
+          showToast('Delete failed: ' + e, 'error');
+        }
       };
       wrap.appendChild(edit); wrap.appendChild(del); return wrap;
     } },
