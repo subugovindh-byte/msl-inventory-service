@@ -28,13 +28,23 @@ function migrate() {
   db.exec(`
     PRAGMA foreign_keys = ON;
     CREATE TABLE IF NOT EXISTS qbids (
-      qbid TEXT PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      qbid TEXT UNIQUE,
       supplier TEXT,
       quarry TEXT,
       weight_kg REAL,
       size_mm TEXT,
       grade TEXT,
-      received_date TEXT
+      received_date TEXT,
+      material_type TEXT,
+      material_id INTEGER,
+      supplier_id INTEGER,
+      gross_cost REAL,
+      transport_cost REAL,
+      other_cost REAL,
+      total_cost REAL,
+      splitable_blk_count INTEGER,
+      stone_type TEXT
     );
 
     -- add cost columns to qbids (gross, transport, other, total)
@@ -94,6 +104,67 @@ function migrate() {
   safeAlter("ALTER TABLE blocks ADD COLUMN yard_location TEXT;");
   safeAlter("ALTER TABLE blocks ADD COLUMN status TEXT;");
   safeAlter("ALTER TABLE blocks ADD COLUMN notes TEXT;");
+
+  // Migrate legacy qbids table (qbid TEXT PRIMARY KEY, no numeric id) to the
+  // newer schema with a stable integer primary key. We keep qbid as UNIQUE so
+  // existing FKs (blocks.parent_qbid -> qbids.qbid) remain valid.
+  try {
+    const qbidCols = db.prepare("PRAGMA table_info('qbids')").all().map(r => r.name);
+    const hasId = qbidCols.includes('id');
+    const hasQbid = qbidCols.includes('qbid');
+    if (!hasId && hasQbid) {
+      const targetCols = [
+        'qbid',
+        'supplier',
+        'quarry',
+        'weight_kg',
+        'size_mm',
+        'grade',
+        'received_date',
+        'material_type',
+        'material_id',
+        'supplier_id',
+        'gross_cost',
+        'transport_cost',
+        'other_cost',
+        'total_cost',
+        'splitable_blk_count',
+        'stone_type'
+      ];
+      const copyCols = targetCols.filter(c => qbidCols.includes(c));
+      db.exec('PRAGMA foreign_keys = OFF;');
+      db.exec('BEGIN;');
+      db.exec(`CREATE TABLE IF NOT EXISTS qbids_new (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        qbid TEXT UNIQUE,
+        supplier TEXT,
+        quarry TEXT,
+        weight_kg REAL,
+        size_mm TEXT,
+        grade TEXT,
+        received_date TEXT,
+        material_type TEXT,
+        material_id INTEGER,
+        supplier_id INTEGER,
+        gross_cost REAL,
+        transport_cost REAL,
+        other_cost REAL,
+        total_cost REAL,
+        splitable_blk_count INTEGER,
+        stone_type TEXT
+      );`);
+      if (copyCols.length > 0) {
+        db.exec(`INSERT INTO qbids_new (${copyCols.join(', ')}) SELECT ${copyCols.join(', ')} FROM qbids;`);
+      }
+      db.exec('DROP TABLE qbids;');
+      db.exec('ALTER TABLE qbids_new RENAME TO qbids;');
+      db.exec('COMMIT;');
+      db.exec('PRAGMA foreign_keys = ON;');
+    }
+  } catch (e) {
+    try { db.exec('ROLLBACK;'); } catch (e2) {}
+    try { db.exec('PRAGMA foreign_keys = ON;'); } catch (e3) {}
+  }
 
     try {
       // Add material_type to qbids table if missing

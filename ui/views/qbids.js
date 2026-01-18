@@ -259,6 +259,7 @@ export async function renderQbids(root, params = {}) {
       wrap.appendChild(edit); wrap.appendChild(del); return wrap;
     } },
     { headerName: '#', headerTooltip: 'Row number (not a database ID)', valueGetter: (p) => (p && p.node && typeof p.node.rowIndex === 'number') ? (p.node.rowIndex + 1) : '', width: 70, minWidth: 60, maxWidth: 80, pinned: 'left', suppressHeaderMenuButton: true, sortable: false, filter: false, resizable: false },
+    { headerName: 'ID', field: 'id', width: 90, minWidth: 80, maxWidth: 110, suppressHeaderMenuButton: true },
     { headerName: 'QBID', field: 'qbid' },
     { headerName: 'Supplier', field: 'supplier_name', valueGetter: (p) => p.data.supplier_name || p.data.supplier },
     { headerName: 'Quarry', field: 'quarry' },
