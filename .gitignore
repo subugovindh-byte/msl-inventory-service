@@ -4,6 +4,10 @@ node_modules/
 # local databases / data artifacts
 *.db
 
+# allow committing selected local data DBs (requested)
+!dev.db
+!test_ui.db
+
 # allow committing safe fixture DBs (schema-only)
 !db/fixtures/
 !db/fixtures/*.db
