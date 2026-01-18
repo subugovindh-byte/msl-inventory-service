@@ -15,6 +15,148 @@ import NexaAI from './ainexaia.js';
 // ensure the imported module is attached to window as a fallback
 try { if (!window.NexaAI) window.NexaAI = NexaAI; console.debug && console.debug('main: ensured window.NexaAI'); } catch (e) { console.warn('main: could not attach NexaAI to window', e); }
 
+function normalizeThemeValue(raw) {
+  const cleaned = String(raw || '').trim().toLowerCase();
+  if (!cleaned) return '';
+  const squashed = cleaned.replace(/[^a-z]/g, '');
+  if (!squashed) return '';
+  if (squashed === 'saltpepper' || squashed === 'saltandpepper') return 'saltpepper';
+  if (squashed === 'day' || squashed === 'light' || squashed === 'daytime') return 'day';
+  if (squashed === 'night' || squashed === 'dark' || squashed === 'nighttime') return 'night';
+  return '';
+}
+
+function getThemeFromUrl() {
+  try {
+    const u = new URL(window.location.href);
+    const fromSearch = normalizeThemeValue(u.searchParams.get('theme'));
+    if (fromSearch) return fromSearch;
+  } catch (_) {}
+
+  // Support hash query: #tiles?theme=saltpepper
+  try {
+    const rawHash = String(window.location.hash || '');
+    const idx = rawHash.indexOf('?');
+    if (idx >= 0) {
+      const qs = rawHash.slice(idx + 1);
+      const params = new URLSearchParams(qs);
+      const fromHash = normalizeThemeValue(params.get('theme'));
+      if (fromHash) return fromHash;
+    }
+  } catch (_) {}
+
+  return '';
+}
+
+function setUiBuildThemeBadge(theme) {
+  const el = document.getElementById('ui-build');
+  if (!el) return;
+  if (!el.dataset.baseText) el.dataset.baseText = String(el.textContent || '').trim();
+  const base = el.dataset.baseText;
+  const suffix = theme ? (` • theme: ${theme}`) : '';
+  el.textContent = base + suffix;
+}
+
+function applyAutoTheme() {
+  const body = document && document.body;
+  if (!body) return;
+
+  // URL can force the theme (handy for debugging / demos)
+  const urlTheme = getThemeFromUrl();
+  if (urlTheme) {
+    try { localStorage.setItem('gxTheme', urlTheme); } catch (_) {}
+  }
+
+  const stored = (() => {
+    try { return normalizeThemeValue(localStorage.getItem('gxTheme')); } catch (_) { return ''; }
+  })();
+
+  // Standard/default theme: Salt & Pepper.
+  // Selection priority: URL -> explicit localStorage -> default saltpepper.
+  let theme = (stored === 'day' || stored === 'night' || stored === 'saltpepper') ? stored : '';
+  if (!theme) {
+    const h = new Date().getHours();
+    const isDaytime = (h >= 7 && h < 19);
+    // Daytime default: light header theme.
+    theme = isDaytime ? 'night' : 'saltpepper';
+  }
+
+  body.classList.toggle('gx-theme-day', theme === 'day');
+  body.classList.toggle('gx-theme-night', theme === 'night');
+  body.classList.toggle('gx-theme-saltpepper', theme === 'saltpepper');
+
+  setUiBuildThemeBadge(theme);
+
+  return theme;
+}
+
+function initThemeToggle() {
+  const actions = document.getElementById('header-actions');
+  const moreMenu = document.getElementById('header-more-menu');
+  if (!actions && !moreMenu) return;
+  if (document.getElementById('gx-theme-toggle')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'gx-theme-toggle';
+  btn.type = 'button';
+  btn.className = 'header-action';
+  btn.title = 'Toggle theme (Auto / Day / Night / SaltPepper)';
+
+  const labelFor = (mode) => {
+    if (mode === 'auto') return 'Theme: Auto';
+    if (mode === 'day') return 'Theme: Day';
+    if (mode === 'night') return 'Theme: Night';
+    if (mode === 'saltpepper') return 'Theme: S&P';
+    return 'Theme';
+  };
+
+  const getStoredMode = () => {
+    try { return normalizeThemeValue(localStorage.getItem('gxTheme')); } catch (_) { return ''; }
+  };
+
+  const currentMode = () => {
+    const stored = getStoredMode();
+    return stored || 'auto';
+  };
+
+  const setMode = (mode) => {
+    try {
+      if (!mode || mode === 'auto') localStorage.removeItem('gxTheme');
+      else localStorage.setItem('gxTheme', mode);
+    } catch (_) {}
+    const active = applyAutoTheme() || mode;
+    btn.textContent = labelFor(mode);
+    btn.setAttribute('aria-label', `Theme: ${active || mode}`);
+  };
+
+  btn.addEventListener('click', () => {
+    const order = ['auto', 'day', 'night', 'saltpepper'];
+    const cur = currentMode();
+    const idx = Math.max(0, order.indexOf(cur));
+    const next = order[(idx + 1) % order.length];
+    setMode(next);
+  });
+
+  // Initial label reflects stored mode (or auto)
+  btn.textContent = labelFor(currentMode());
+
+  // Add to desktop actions if available.
+  if (actions) actions.appendChild(btn);
+
+  // Also add a clone to the mobile "more" menu so it's reachable when #header-actions is hidden.
+  if (moreMenu) {
+    const clone = btn.cloneNode(true);
+    clone.id = 'gx-theme-toggle-more';
+    clone.addEventListener('click', () => btn.click());
+    moreMenu.appendChild(clone);
+  }
+}
+
+applyAutoTheme();
+initThemeToggle();
+
+// Note: theme no longer auto-switches based on OS/time; Salt & Pepper is standard.
+
 registerRoute('qbids', renderQbids);
 registerRoute('blocks', renderBlocks);
 registerRoute('slabs', renderSlabs);

@@ -4,15 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Inventory Management</title>
-  <link rel="stylesheet" href="/ui/styles.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/ui/styles.css?v=20260118T000008">
   <!-- AG Grid Community styles (local) -->
   <link rel="stylesheet" href="/ui/vendor/ag-grid/ag-theme-alpine.css">
 </head>
-<body>
+<body class="gx-theme-night">
   <header>
     <div class="header-top">
       <div class="brand">
-        <img id="site-logo" src="/ui/vendor/Modernex_Logo_Transparent.png" alt="Modernex Logo">
+        <span class="logo-wrap">
+          <img class="site-logo site-logo-dark" src="/ui/vendor/Modernex_Logo_Transparent.png" alt="Modernex Logo">
+          <img class="site-logo site-logo-light" src="/ui/vendor/Modernex_Logo_Transparent-day.png" alt="Modernex Logo">
+        </span>
         <h1>Inventory Management</h1>
       </div>
       <div class="search-wrap">
@@ -80,14 +87,14 @@
     <section id="content"></section>
   </main>
   <!-- Build/version badge to help confirm the loaded UI version -->
-  <div id="ui-build" style="position:fixed;right:8px;bottom:8px;background:#222;color:#fff;padding:6px 8px;border-radius:6px;font-size:12px;opacity:0.9;z-index:9999">UI v2026-01-04</div>
+  <div id="ui-build" style="position:fixed;right:8px;bottom:8px;background:#222;color:#fff;padding:6px 8px;border-radius:6px;font-size:12px;opacity:0.9;z-index:9999">UI v2026-01-18a</div>
   <!-- AG Grid Community script (local UMD) -->
   <script src="/ui/vendor/ag-grid/ag-grid-community.noStyle.js"></script>
   <!-- SheetJS for Excel export (local) -->
   <script src="/ui/vendor/sheetjs/xlsx.full.min.js"></script>
   <!-- QR code generator (CDN). Used by Labels view. -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script type="module" src="/ui/main.js?v=20260104T170200"></script>
+  <script type="module" src="/ui/main.js?v=20260118T000008"></script>
   <!-- About panel for AI NexaIQ -->
   <div id="nexa-about" class="nexa-about" hidden>
     <div class="nexa-about-content">

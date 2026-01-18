@@ -3,20 +3,100 @@
 	--gx-amazon-navy:#232F3E;
 	--gx-amazon-slate:#37475A;
 	--gx-amazon-orange:#FF9900;
-	--gx-bg:#f6f7fb;
+	/* Salt & Pepper neutrals */
+	--gx-salt:#f8fafc;
+	--gx-salt-2:#eef2f7;
+	--gx-pepper:#0b1220;
+	--gx-pepper-2:#111827;
+	/* Standard theme: Salt & Pepper */
+	--gx-bg: var(--gx-salt-2);
 	--gx-surface:#ffffff;
 	--gx-border:#e5e7eb;
-	--gx-text:#0f172a;
+	--gx-text: var(--gx-pepper);
 	--gx-muted:#475569;
-	/* Unified header/palette colors */
-	--gx-header-bg:#232F3E;
-	--gx-header-text:#ffffff;
+	/* Google brand colors */
+	--gx-google-blue:#4285F4;
+	--gx-google-blue-dark:#3367D6;
+	--gx-google-red:#EA4335;
+	--gx-google-yellow:#FBBC05;
+	--gx-google-green:#34A853;
+	--gx-google-gradient:linear-gradient(90deg,
+		var(--gx-google-blue) 0%,
+		var(--gx-google-blue) 25%,
+		var(--gx-google-red) 25%,
+		var(--gx-google-red) 50%,
+		var(--gx-google-yellow) 50%,
+		var(--gx-google-yellow) 75%,
+		var(--gx-google-green) 75%,
+		var(--gx-google-green) 100%
+	);
+	/* Unified header/palette colors (standard: Salt & Pepper header) */
+	--gx-header-bg: var(--gx-pepper-2);
+	--gx-header-text: var(--gx-salt);
+	--gx-header-border: rgba(248,250,252,0.14);
+	--gx-header-control-border: rgba(248,250,252,0.18);
+	--gx-header-control-bg: rgba(248,250,252,0.08);
+	--gx-header-control-bg-hover: rgba(248,250,252,0.12);
+	--gx-header-title-color: rgba(248,250,252,0.80);
+	--gx-logo-filter: brightness(1.15) contrast(1.05) saturate(0.95);
+	/* (Optional) Google accent strip (currently unused) */
+	--gx-header-google-accent: var(--gx-google-gradient);
+	/* Keep logo background transparent so it inherits the header behind it */
+	--gx-header-brand-bg: transparent;
 	--gx-button-bg:#ffffff;
 	--gx-button-text:#0f172a;
 	--gx-button-border:#cbd5e1;
 	--gx-button-hover:#f8fafc;
-	--gx-accent:#FF9900;
-	--gx-accent-light:rgba(255,153,0,0.55);
+	--gx-accent:#64748b;
+	--gx-accent-light:rgba(100,116,139,0.45);
+	/* Logo sizing (keep variants consistent) */
+	--gx-logo-h:72px;
+	--gx-logo-w:clamp(150px, 14vw, 220px);
+}
+
+/* Day theme (default): dark header */
+body.gx-theme-day{
+	--gx-header-bg:var(--gx-google-blue);
+	--gx-header-text:#ffffff;
+	--gx-header-border: var(--gx-google-blue-dark);
+	--gx-header-control-border: rgba(255,255,255,0.18);
+	--gx-header-control-bg: rgba(255,255,255,0.10);
+	--gx-header-control-bg-hover: rgba(255,255,255,0.14);
+	--gx-header-title-color: rgba(255,255,255,0.78);
+	--gx-logo-filter: brightness(1.25) contrast(1.08) saturate(0.95);
+}
+
+/* Night theme: light Google header */
+body.gx-theme-night{
+	--gx-header-bg:#ffffff;
+	--gx-header-text:#0f172a;
+	--gx-header-border: var(--gx-border);
+	--gx-header-control-border: rgba(15,23,42,0.18);
+	--gx-header-control-bg: rgba(15,23,42,0.06);
+	--gx-header-control-bg-hover: rgba(15,23,42,0.10);
+	--gx-header-title-color: rgba(15,23,42,0.86);
+	--gx-logo-filter: none;
+}
+
+/* Salt & Pepper theme: neutral UI + dark header */
+body.gx-theme-saltpepper{
+	--gx-bg: var(--gx-salt-2);
+	--gx-surface:#ffffff;
+	--gx-border:#e5e7eb;
+	--gx-text: var(--gx-pepper);
+	--gx-muted:#475569;
+
+	--gx-header-bg: var(--gx-pepper-2);
+	--gx-header-text: var(--gx-salt);
+	--gx-header-border: rgba(248,250,252,0.14);
+	--gx-header-control-border: rgba(248,250,252,0.18);
+	--gx-header-control-bg: rgba(248,250,252,0.08);
+	--gx-header-control-bg-hover: rgba(248,250,252,0.12);
+	--gx-header-title-color: rgba(248,250,252,0.80);
+	--gx-logo-filter: brightness(1.15) contrast(1.05) saturate(0.95);
+
+	--gx-accent:#64748b;
+	--gx-accent-light:rgba(100,116,139,0.45);
 }
 
 *, *::before, *::after{box-sizing:border-box}
@@ -29,7 +109,7 @@ body.gx-nav-open{overflow:hidden}
 /* Header darkened ~20% for stronger contrast */
 #header-glass-placeholder{}
 /* Glass finish header */
-header{background:var(--gx-header-bg);color:var(--gx-header-text);padding:10px 12px 3px 12px;display:flex;flex-direction:column;gap:5px;min-height:128px;border-bottom:1px solid var(--gx-amazon-slate);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+header{background:var(--gx-header-bg);color:var(--gx-header-text);padding:10px 12px 3px 12px;display:flex;flex-direction:column;gap:5px;min-height:128px;border-bottom:1px solid var(--gx-header-border);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(16,24,40,0.06)}
 header h1{font-size:12px;margin:0}
 /* Header top tools (search + AI label) */
 .header-top{display:flex;align-items:center;justify-content:flex-start;gap:32px;flex-wrap:nowrap;padding-bottom:4px;width:100%}
@@ -212,23 +292,26 @@ header h1{font-size:12px;margin:0}
 /* Main header row for brand + nav */
 .header-main{display:flex;align-items:center;justify-content:space-between}
 /* Mobile menu toggle (hidden by default; shown on mobile) */
-.menu-toggle{display:none;padding:8px 10px;border:1px solid rgba(255,255,255,0.18);border-radius:10px;background:rgba(255,255,255,0.10);color:var(--gx-header-text);cursor:pointer;font-size:13px}
-.menu-toggle:hover{background:rgba(255,255,255,0.14)}
+.menu-toggle{display:none;padding:8px 10px;border:1px solid var(--gx-header-control-border);border-radius:10px;background:var(--gx-header-control-bg);color:var(--gx-header-text);cursor:pointer;font-size:13px}
+.menu-toggle:hover{background:var(--gx-header-control-bg-hover)}
 .menu-toggle:focus{outline:2px solid rgba(255,153,0,0.55);outline-offset:2px}
 /* Brand/logo layout */
 .brand{display:flex;align-items:center;gap:32px}
 /* Ensure logo displays nicely on the white header and doesn't get pushed away */
 /* Larger logo and graceful sizing */
-#site-logo{height:72px;width:auto;display:block;background:transparent;padding:0;border-radius:0;box-shadow:none;flex-shrink:0;object-fit:contain;filter:brightness(1.70) contrast(1.10) saturate(0.65);-webkit-filter:brightness(1.70) contrast(1.10) saturate(0.65)}
-.logo-wrap{display:inline-block;padding:6px;border-radius:10px;background:conic-gradient(#4285F4 0% 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%)}
-.logo-wrap img{display:block;border-radius:6px;background:#fff}
+.logo-wrap{display:inline-flex;align-items:center;justify-content:center;width:var(--gx-logo-w);height:var(--gx-logo-h);padding:0;border-radius:0;background:var(--gx-header-brand-bg)}
+.site-logo{width:100%;height:100%;display:block;background:transparent;padding:0;border-radius:0;box-shadow:none;flex-shrink:0;object-fit:contain;filter:var(--gx-logo-filter);-webkit-filter:var(--gx-logo-filter)}
+
+/* Theme-specific logo selection */
+.site-logo-light{display:none}
+body.gx-theme-night .site-logo-dark{display:none}
+body.gx-theme-night .site-logo-light{display:block}
 /* Make the textual title truncate to keep header compact */
-.brand h1{font-size:18px;margin:0;color:rgba(255,255,255,0.68);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(180px, 18vw, 320px);font-weight:600;letter-spacing:0.15px;text-shadow:0 1px 0 rgba(0,0,0,0.45), 0 0 8px rgba(255,255,255,0.03)}
+.brand h1{font-size:18px;margin:0;color:var(--gx-header-title-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(180px, 18vw, 320px);font-weight:600;letter-spacing:0.15px;text-shadow:0 1px 0 rgba(0,0,0,0.45), 0 0 8px rgba(255,255,255,0.03)}
 
 @media (max-width:900px){
 	.header-top{gap:16px;flex-wrap:wrap}
 	.brand{gap:16px}
-	#site-logo{height:56px}
 	.brand h1{font-size:16px;max-width:200px}
 	.amazon-search-container{
 		min-width:0;
@@ -576,7 +659,7 @@ button,input,select,textarea { font-family: inherit; }
 	.header-main{flex-direction:column;align-items:flex-start;gap:8px;width:100%}
 	.header-top{width:100%;margin-bottom:4px}
 	.brand{width:100%;display:flex;align-items:center;gap:8px}
-	#site-logo{height:72px;max-height:88px;object-fit:contain;padding:0;border-radius:0}
+	:root{--gx-logo-h:72px}
 	.brand h1{font-size:16px;max-width:calc(100% - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 	.menu-toggle{display:inline-flex}
 	/* Mobile off-canvas menu (better UX: no header resize) */
@@ -623,7 +706,7 @@ button,input,select,textarea { font-family: inherit; }
 }
 
 @media (max-width:480px){
-	#site-logo{height:56px;max-height:72px;object-fit:contain;padding:0;border-radius:0}
+	:root{--gx-logo-h:56px}
 	.brand h1{font-size:14px;max-width:calc(100% - 80px)}
 	nav button{padding:6px 8px;font-size:12px}
 	th,td{font-size:10px}

@@ -16,7 +16,7 @@ export function startRouter() {
   // Avoid double-initial render:
   // - If we set `location.hash`, the browser will fire a `hashchange` which calls `handleRoute()`.
   // - But we also call `handleRoute()` below for the initial render.
-  // On a cold load with no hash, that leads to the default view rendering twice.
+  // On a cold load with no hash, that can lead to the default view rendering twice.
   if (!location.hash && defaultRoute) {
     const newHash = '#' + defaultRoute;
     if (typeof history !== 'undefined' && typeof history.replaceState === 'function') {
